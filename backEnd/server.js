@@ -16,26 +16,13 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-// Create Product Table (Run this manually in your database)
-const createTable = async () => {
-  const query = `CREATE TABLE IF NOT EXISTS products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    colors TEXT[],
-    picture TEXT NOT NULL
-  )`;
-  await pool.query(query);
-};
-createTable();
-
 // Add Product API
 app.post("/add-product", async (req, res) => {
   const { name, price, colors, picture } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO products (name, price, colors, picture) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, price, colors, picture]
+      "INSERT INTO products (name, colors, price, quantity, picture) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [name, colors, price, quantity, picture]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
