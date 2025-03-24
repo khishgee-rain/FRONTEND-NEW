@@ -15,3 +15,9 @@ model Product {
   quantity Int      @default(0)
   picture  String   @db.Text
 }
+
+model userData {
+  id       Int    @id @default(autoincrement())
+  username String @db.VarChar(255)
+  password String @db.VarChar(255)
+}

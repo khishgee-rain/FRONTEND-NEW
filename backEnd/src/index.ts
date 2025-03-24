@@ -103,6 +103,19 @@ app.delete("/product/:id", async (req: Request, res: Response) => {
 });
 
 
+app.post("/signup", async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await prisma.userData.create({ data: { username, password } });
+        res.status(201).json({ message: "User created", user });
+    } catch (error) {
+        res.status(500).json({ error: "Signup failed" });
+    }
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
