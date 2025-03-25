@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
 import cors from "cors";
- // Add this before defining your routes
 
 dotenv.config();
 
@@ -114,6 +113,20 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  prisma.userData.findFirst({
+    where: { username },
+  }).then((user) => {
+    if (!user || user.password !== password) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
+    res.json({ message: "Login successful", user });
+  }).catch((error) => {
+    res.status(500).json({ error: "Login failed" });
+  });
+  });
 
 
 const PORT = process.env.PORT || 3000;
